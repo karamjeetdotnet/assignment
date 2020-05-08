@@ -4,7 +4,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 const App = () => {
     return (
-        <Router>
+        <Router basename="/assignment">
             <Routes />
         </Router>
         );
