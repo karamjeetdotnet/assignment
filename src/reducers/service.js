@@ -1,12 +1,13 @@
-import { SERVICE_READ, SERVICE_READ_PENDING, SERVICE_READ_FULFILLED, SERVICE_READ_REJECTED } from "../actions/service";
+import { SERVICE_READ, SERVICE_READ_PENDING, SERVICE_READ_FULFILLED, SERVICE_READ_REJECTED, SERVICE_READ_ACTIVE } from "../actions/service";
 
 const defaultState = {
     services: [],
+    filteredServices: [],
     processing: false,
     error: null
 };
 
-const toasts = (state = defaultState, action) => {
+const services = (state = defaultState, action) => {
     switch (action.type) {
         case SERVICE_READ:
         case SERVICE_READ_PENDING:
@@ -18,7 +19,8 @@ const toasts = (state = defaultState, action) => {
             return {
                 ...state,
                 processing: false,
-                services: [...action.payload.data.data]
+                services: [...action.payload.data.data],
+                filteredServices: [...action.payload.data.data]
             };
         case SERVICE_READ_REJECTED:
             return {
@@ -26,9 +28,19 @@ const toasts = (state = defaultState, action) => {
                 processing: false,
                 error: action.payload
             };
+        case SERVICE_READ_ACTIVE:
+            return {
+                ...state,
+                filteredServices: state.services.map(x=> {
+                    return {
+                        ...x,
+                        isActive: action.payload === x.id
+                    }
+                })
+            }
         default:
             return state;
     }
 };
 
-export default toasts;
+export default services;
